@@ -23,12 +23,20 @@ public class AuthCommandService : IAuthCommandService
             throw new InvalidOperationException("User with this email already exists");
         }
 
+        // Check if user with username already exists
+        var existingUsername = await _userRepository.FindByUsernameAsync(request.Username);
+        if (existingUsername != null)
+        {
+            throw new InvalidOperationException("User with this username already exists");
+        }
+
         // Hash password (using BCrypt for security)
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
         // Create new user
         var user = new User
         {
+            Username = request.Username,
             Email = request.Email,
             PasswordHash = passwordHash
         };

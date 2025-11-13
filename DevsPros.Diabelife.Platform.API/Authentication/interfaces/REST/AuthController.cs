@@ -23,10 +23,10 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     [SwaggerOperation(
         Summary = "Register a new user",
-        Description = "Creates a new user account with email and password")]
+        Description = "Creates a new user account with username, email and password")]
     [SwaggerResponse(201, "User registered successfully")]
     [SwaggerResponse(400, "Invalid request data")]
-    [SwaggerResponse(409, "User with this email already exists")]
+    [SwaggerResponse(409, "User with this email or username already exists")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
     {
         try
@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     [SwaggerOperation(
         Summary = "Login user",
-        Description = "Authenticates user and returns JWT token")]
+        Description = "Authenticates user with username or email and returns JWT token")]
     [SwaggerResponse(200, "Login successful", typeof(LoginResponseDto))]
     [SwaggerResponse(401, "Invalid credentials")]
     [SwaggerResponse(400, "Invalid request data")]
@@ -55,11 +55,12 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var token = await _authQueryService.LoginAsync(request);
+            var (token, user) = await _authQueryService.LoginAsync(request);
             var response = new LoginResponseDto
             {
                 Token = token,
-                Email = request.Email
+                Username = user.Username,
+                Email = user.Email
             };
             return Ok(response);
         }
