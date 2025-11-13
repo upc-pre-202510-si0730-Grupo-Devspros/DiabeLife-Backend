@@ -4,7 +4,7 @@ using DevsPros.Diabelife.Platform.API.Notifications.Domain.Model;
 using DevsPros.Diabelife.Platform.API.Appointment.Domain.Model;
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
-
+using DevsPros.Diabelife.Platform.API.Glucometer.Domain.Model;
 namespace DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 /// <summary>
@@ -21,6 +21,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Notification> Notifications { get; set; }
     // Appointment DbSets
     public DbSet<AppointmentEntity> Appointments { get; set; }
+    // Glucometer DbSets
+    public DbSet<GlucoseMeasurement> GlucoseMeasurements { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
         // Add the created and updated interceptor
@@ -100,7 +102,21 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(a => a.CreatedAt).HasColumnName("created_at").IsRequired();
             entity.Property(a => a.UpdatedAt).HasColumnName("updated_at").IsRequired();
         });
-
+        // Glucometer Entity Configuration
+        builder.Entity<GlucoseMeasurement>(entity =>
+        {
+            entity.ToTable("glucose_measurements");
+            entity.HasKey(g => g.Id);
+            entity.Property(g => g.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(g => g.Value).HasColumnName("value").IsRequired();
+            entity.Property(g => g.Unit).HasColumnName("unit").HasMaxLength(50).IsRequired();
+            entity.Property(g => g.Status).HasColumnName("status").HasMaxLength(50);
+            entity.Property(g => g.Trend).HasColumnName("trend").HasMaxLength(100);
+            entity.Property(g => g.MeasurementDate).HasColumnName("measurement_date").IsRequired();
+            entity.Property(g => g.CreatedAt).HasColumnName("created_at").IsRequired();
+            entity.Property(g => g.UpdatedAt).HasColumnName("updated_at").IsRequired();
+        });
+        
         builder.UseSnakeCaseNamingConvention();
     }
 }
