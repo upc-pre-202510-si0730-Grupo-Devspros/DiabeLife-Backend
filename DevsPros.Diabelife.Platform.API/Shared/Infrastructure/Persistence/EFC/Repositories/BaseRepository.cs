@@ -5,49 +5,71 @@ using Microsoft.EntityFrameworkCore;
 namespace DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 /// <summary>
-///     Base repository for all repositories
+/// Base generic repository and unit of work implementation for Entity Framework Core.
 /// </summary>
-/// <remarks>
-///     This class implements the basic CRUD operations for all repositories.
-///     It requires the entity type to be passed as a generic parameter.
-///     It also requires the context to be passed in the constructor.
-/// </remarks>
-public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity>
+    where TEntity : class
 {
     protected readonly AppDbContext Context;
 
-    protected BaseRepository(AppDbContext context)
+    public BaseRepository(AppDbContext context)
     {
         Context = context;
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Adds an entity asynchronously to the database context.
+    /// </summary>
     public async Task AddAsync(TEntity entity)
     {
         await Context.Set<TEntity>().AddAsync(entity);
     }
 
-    /// <inheritdoc />
-    public async Task<TEntity?> FindByIdAsync(int id)
+    /// <summary>
+    /// Finds an entity by integer ID (not recommended if TId is not int).
+    /// </summary>
+    public Task<TEntity?> FindByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Finds an entity by its ID (supports custom ID types).
+    /// </summary>
+    public async Task<TEntity?> FindByIdAsync(TId id)
     {
         return await Context.Set<TEntity>().FindAsync(id);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Updates an existing entity.
+    /// </summary>
     public void Update(TEntity entity)
     {
         Context.Set<TEntity>().Update(entity);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Removes an entity from the context.
+    /// </summary>
     public void Remove(TEntity entity)
     {
         Context.Set<TEntity>().Remove(entity);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns a list of all entities.
+    /// </summary>
     public async Task<IEnumerable<TEntity>> ListAsync()
     {
         return await Context.Set<TEntity>().ToListAsync();
+    }
+
+    /// <summary>
+    /// Saves all pending changes in the current unit of work.
+    /// </summary>
+    public async Task CompleteAsync()
+    {
+        await Context.SaveChangesAsync();
     }
 }
