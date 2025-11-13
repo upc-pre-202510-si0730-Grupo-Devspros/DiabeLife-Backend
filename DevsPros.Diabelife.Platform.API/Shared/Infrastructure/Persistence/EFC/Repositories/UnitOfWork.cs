@@ -1,7 +1,7 @@
-using CatchUpPlatform.API.Shared.Domain.Repositories;
+using DevsPros.Diabelife.Platform.API.Shared.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
-namespace CatchUpPlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+namespace DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 
 /// <summary>
 ///     Unit of work implementation

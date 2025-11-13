@@ -1,4 +1,4 @@
-namespace CatchUpPlatform.API.Shared.Domain.Repositories;
+namespace DevsPros.Diabelife.Platform.API.Shared.Domain.Repositories;
 
 /// <summary>
 ///     Unit of work interface

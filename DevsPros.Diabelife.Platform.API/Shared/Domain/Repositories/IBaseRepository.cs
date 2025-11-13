@@ -1,43 +1,43 @@
 namespace DevsPros.Diabelife.Platform.API.Shared.Domain.Repositories;
 
 /// <summary>
-///     Base repository interface for all repositories
+///     Defines the contract for a base repository providing basic CRUD operations for entities.
 /// </summary>
-/// <remarks>
-///     This interface defines the basic CRUD operations for all repositories
-/// </remarks>
-/// <typeparam name="TEntity">The Entity Type</typeparam>
+/// <typeparam name="TEntity">The type of the entity managed by this repository.</typeparam>
 public interface IBaseRepository<TEntity>
 {
     /// <summary>
-    ///     Add entity to the repository
+    ///     Asynchronously adds a new entity to the repository.
     /// </summary>
-    /// <param name="entity">Entity object to add</param>
-    /// <returns></returns>
+    /// <param name="entity">The entity to add.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     Task AddAsync(TEntity entity);
 
     /// <summary>
-    ///     Find entity by id
+    ///     Asynchronously finds an entity by its identifier.
     /// </summary>
-    /// <param name="id">The Entity ID to Find</param>
-    /// <returns>Entity object if found</returns>
+    /// <param name="id">The identifier of the entity.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation,
+    ///     containing the entity if found, otherwise null.
+    /// </returns>
     Task<TEntity?> FindByIdAsync(int id);
 
     /// <summary>
-    ///     Update entity
+    ///     Updates an existing entity in the repository.
     /// </summary>
-    /// <param name="entity">The entity object to update</param>
+    /// <param name="entity">The entity to update.</param>
     void Update(TEntity entity);
 
     /// <summary>
-    ///     Remove and entity
+    ///     Removes an entity from the repository.
     /// </summary>
-    /// <param name="entity">The entity object to remove</param>
+    /// <param name="entity">The entity to remove.</param>
     void Remove(TEntity entity);
 
     /// <summary>
-    ///     Get All entities
+    ///     Asynchronously retrieves all entities from the repository.
     /// </summary>
-    /// <returns>An Enumerable containing all entity objects</returns>
+    /// <returns>A task that represents the asynchronous operation, containing an enumerable of all entities.</returns>
     Task<IEnumerable<TEntity>> ListAsync();
 }
