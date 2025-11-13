@@ -12,6 +12,11 @@ using DevsPros.Diabelife.Platform.API.Appointment.Application.Internal.OutboundS
 using DevsPros.Diabelife.Platform.API.Appointment.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.Appointment.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Appointment.Infrastructure.Persistence.EFC.Repositories;
+using DevsPros.Diabelife.Platform.API.Glucometer.Application.Internal.CommandServices;
+using DevsPros.Diabelife.Platform.API.Glucometer.Application.Internal.OutboundServices;
+using DevsPros.Diabelife.Platform.API.Glucometer.Application.Internal.QueryServices;
+using DevsPros.Diabelife.Platform.API.Glucometer.Domain.Repositories;
+using DevsPros.Diabelife.Platform.API.Glucometer.Infrastructure.Persistence.EFC.Repositories;
 using DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -73,6 +78,7 @@ builder.Services.AddScoped<IRecommendationRepository, RecommendationRepository>(
 builder.Services.AddScoped<IFoodDataRepository, FoodDataRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IGlucoseMeasurementRepository, GlucoseMeasurementRepository>();
 
 // Register Command Services
 builder.Services.AddScoped<IHealthMetricCommandService, HealthMetricCommandService>();
@@ -80,6 +86,7 @@ builder.Services.AddScoped<IRecommendationCommandService, RecommendationCommandS
 builder.Services.AddScoped<IFoodDataCommandService, FoodDataCommandService>();
 builder.Services.AddScoped<NotificationCommandService>();
 builder.Services.AddScoped<IAppointmentCommandService, AppointmentCommandService>();
+builder.Services.AddScoped<IGlucoseMeasurementCommandService, GlucoseMeasurementCommandService>();
 
 // Register Query Services
 builder.Services.AddScoped<IHealthMetricQueryService, HealthMetricQueryService>();
@@ -87,6 +94,7 @@ builder.Services.AddScoped<IRecommendationQueryService, RecommendationQueryServi
 builder.Services.AddScoped<IFoodDataQueryService, FoodDataQueryService>();
 builder.Services.AddScoped<NotificationQueryService>();
 builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
+builder.Services.AddScoped<IGlucoseMeasurementQueryService, GlucoseMeasurementQueryService>();
 
 var app = builder.Build();
 
