@@ -1,5 +1,8 @@
 using DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
 using DevsPros.Diabelife.Platform.API.HealthyLife.Domain.Model;
+
+using DevsPros.Diabelife.Platform.API.Shared.Domain.Model;
+using DevsPros.Diabelife.Platform.API.Reports.Domain.Model;
 using DevsPros.Diabelife.Platform.API.Notifications.Domain.Model;
 using DevsPros.Diabelife.Platform.API.Appointment.Domain.Model;
 using DevsPros.Diabelife.Platform.API.Glucometer.Domain.Model;
@@ -21,6 +24,11 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<HealthMetric> HealthMetrics { get; set; }
     public DbSet<Recommendation> Recommendations { get; set; }
     public DbSet<FoodData> FoodData { get; set; }
+
+    
+    // Authentication & Reports DbSets
+    public DbSet<User> Users { get; set; }
+    public DbSet<Report> Reports { get; set; }
 
     // Notifications DbSets
     public DbSet<Notification> Notifications { get; set; }
@@ -81,6 +89,45 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(f => f.Timestamp).HasColumnName("timestamp").IsRequired();
             entity.Property(f => f.CreatedAt).HasColumnName("created_at").IsRequired();
             entity.Property(f => f.UpdatedAt).HasColumnName("updated_at").IsRequired();
+        });
+
+
+        // User Entity Configuration
+        builder.Entity<User>(entity =>
+        {
+            entity.ToTable("users");
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(u => u.Email).HasColumnName("email").HasMaxLength(255).IsRequired();
+            entity.Property(u => u.PasswordHash).HasColumnName("password_hash").HasMaxLength(500).IsRequired();
+            entity.Property(u => u.CreatedAt).HasColumnName("created_at").IsRequired();
+            entity.Property(u => u.UpdatedAt).HasColumnName("updated_at").IsRequired();
+            
+            // Unique constraint for email
+            entity.HasIndex(u => u.Email).IsUnique();
+        });
+
+        // Report Entity Configuration
+        builder.Entity<Report>(entity =>
+        {
+            entity.ToTable("reports");
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(r => r.Name).HasColumnName("name").HasMaxLength(200).IsRequired();
+            entity.Property(r => r.Date).HasColumnName("date").IsRequired();
+            entity.Property(r => r.Type).HasColumnName("type").HasMaxLength(100).IsRequired();
+            entity.Property(r => r.Data).HasColumnName("data").IsRequired();
+            entity.Property(r => r.Selected).HasColumnName("selected").IsRequired();
+            entity.Property(r => r.Shared).HasColumnName("shared").IsRequired();
+            entity.Property(r => r.UserId).HasColumnName("user_id").IsRequired();
+            entity.Property(r => r.CreatedAt).HasColumnName("created_at").IsRequired();
+            entity.Property(r => r.UpdatedAt).HasColumnName("updated_at").IsRequired();
+            
+            // Foreign key relationship
+            entity.HasOne(r => r.User)
+                  .WithMany(u => u.Reports)
+                  .HasForeignKey(r => r.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         //
