@@ -1,5 +1,6 @@
 using DevsPros.Diabelife.Platform.API.Authentication.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.Authentication.Interfaces.REST.DTOs;
+using DevsPros.Diabelife.Platform.API.Shared.Domain.Model;
 using DevsPros.Diabelife.Platform.API.Shared.Domain.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,23 +20,24 @@ public class AuthQueryService : IAuthQueryService
         _configuration = configuration;
     }
 
-    public async Task<string> LoginAsync(LoginRequestDto request)
+    public async Task<(string token, User user)> LoginAsync(LoginRequestDto request)
     {
-        // Find user by email
-        var user = await _userRepository.FindByEmailAsync(request.Email);
+        // Find user by username or email
+        var user = await _userRepository.FindByUsernameOrEmailAsync(request.Username);
         if (user == null)
         {
-            throw new UnauthorizedAccessException("Invalid email or password");
+            throw new UnauthorizedAccessException("Invalid username/email or password");
         }
 
         // Verify password
         if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            throw new UnauthorizedAccessException("Invalid email or password");
+            throw new UnauthorizedAccessException("Invalid username/email or password");
         }
 
         // Generate JWT token
-        return GenerateJwtToken(user);
+        var token = GenerateJwtToken(user);
+        return (token, user);
     }
 
     private string GenerateJwtToken(DevsPros.Diabelife.Platform.API.Shared.Domain.Model.User user)
