@@ -40,7 +40,7 @@ public class AuthQueryService : IAuthQueryService
 
     private string GenerateJwtToken(DevsPros.Diabelife.Platform.API.Shared.Domain.Model.User user)
     {
-        var jwtKey = _configuration["Jwt:Key"] ?? "your-secret-key-here-make-it-longer-than-32-characters";
+        var jwtKey = _configuration["Jwt:Key"] ?? "your-secret-key-here-make-it-longer-than-32-characters-for-security";
         var jwtIssuer = _configuration["Jwt:Issuer"] ?? "DiabeLifeAPI";
         var jwtAudience = _configuration["Jwt:Audience"] ?? "DiabeLifeClient";
 
