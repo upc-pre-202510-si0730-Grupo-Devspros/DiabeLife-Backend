@@ -174,7 +174,7 @@ else
     app.UseCors("AllowNetlifyFrontend");
     app.UseHttpsRedirection();
 }
-
+app.UseCors("AllowDevelopment");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
