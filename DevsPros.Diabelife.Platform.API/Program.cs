@@ -9,6 +9,8 @@ using DevsPros.Diabelife.Platform.API.Notifications.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Notifications.Infrastructure.Persistence.EFC.Repositories;
 using DevsPros.Diabelife.Platform.API.Appointment.Application.Internal.CommandServices;
 using DevsPros.Diabelife.Platform.API.Appointment.Application.Internal.OutboundServices;
+using DevsPros.Diabelife.Platform.API.Community.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+
 using DevsPros.Diabelife.Platform.API.Appointment.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.Appointment.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Appointment.Infrastructure.Persistence.EFC.Repositories;
@@ -176,6 +178,7 @@ builder.Services.AddScoped<IReportQueryService, ReportQueryService>();
 builder.Services.AddScoped<NotificationQueryService>();
 builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
 builder.Services.AddScoped<IGlucoseMeasurementQueryService, GlucoseMeasurementQueryService>();
+builder.AddCommunityContextServices();
 
 
 var app = builder.Build();
