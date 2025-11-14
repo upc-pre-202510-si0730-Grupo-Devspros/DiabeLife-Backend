@@ -93,20 +93,19 @@ builder.Services.AddSwaggerGen(c =>
 // -----------------------
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowNetlifyFrontend", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://diabelife-frontend.netlify.app")
-            .AllowAnyHeader()
+        policy.WithOrigins(
+                "https://diabelife-frontend.netlify.app",
+                "http://localhost:5173",
+                "http://localhost:5174"
+            )
             .AllowAnyMethod()
+            .AllowAnyHeader()
             .AllowCredentials();
     });
-    options.AddPolicy("AllowDevelopment", policy =>
-    {
-        policy.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
 });
+
 
 
 // -----------------------
@@ -194,7 +193,7 @@ app.UseSwaggerUI(c =>
 // -----------------------
 // Middleware
 // -----------------------
-app.UseCors("AllowFrontend");
+app.UseCors("AllowDevelopment");
 app.UseHttpsRedirection();
 
 
