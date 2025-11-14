@@ -96,17 +96,18 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowNetlifyFrontend", policy =>
     {
         policy.WithOrigins("https://diabelife-frontend.netlify.app")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
     options.AddPolicy("AllowDevelopment", policy =>
     {
         policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
+
 
 // -----------------------
 // Database
@@ -193,15 +194,9 @@ app.UseSwaggerUI(c =>
 // -----------------------
 // Middleware
 // -----------------------
-if (app.Environment.IsDevelopment())
-{
-    app.UseCors("AllowDevelopment");
-}
-else
-{
-    app.UseCors("AllowNetlifyFrontend");
-    app.UseHttpsRedirection();
-}
+app.UseCors("AllowFrontend");
+app.UseHttpsRedirection();
+
 
 app.UseAuthentication();
 app.UseAuthorization();
