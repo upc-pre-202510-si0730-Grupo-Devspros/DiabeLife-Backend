@@ -37,6 +37,10 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure port for Render deployment
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -177,22 +181,24 @@ builder.Services.AddScoped<IGlucoseMeasurementQueryService, GlucoseMeasurementQu
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+// Configure Swagger for all environments
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DiabeLife API v1");
+    c.RoutePrefix = "swagger"; // Swagger UI available at /swagger
+});
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "DiabeLife API v1");
-        c.RoutePrefix = string.Empty; // Makes Swagger UI the default page
-    });
     app.UseCors("AllowDevelopment");
 }
 else
 {
     app.UseCors("AllowNetlifyFrontend");
+    // Use HTTPS redirection only in production
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
