@@ -46,9 +46,15 @@ using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Mediator.Cortex.Conf
 
 var builder = WebApplication.CreateBuilder(args);
 
+// -----------------------
+// Web host
+// -----------------------
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
+// -----------------------
+// Services
+// -----------------------
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -82,6 +88,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// -----------------------
+// CORS
+// -----------------------
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowNetlifyFrontend", policy =>
@@ -99,10 +108,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+// -----------------------
+// Database
+// -----------------------
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? "Server=localhost;Database=diabelife;Uid=root;Pwd=password;";
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
 
+// -----------------------
+// JWT Auth
+// -----------------------
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "your-secret-key-here-make-it-longer-than-32-characters-for-security";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "DiabeLifeAPI";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "DiabeLifeClient";
@@ -125,6 +140,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// -----------------------
+// Repositories & Services
+// -----------------------
+// Health, Auth, Appointment, Notifications, Glucose, Reports
 builder.Services.AddScoped<IHealthMetricRepository, HealthMetricRepository>();
 builder.Services.AddScoped<IRecommendationRepository, RecommendationRepository>();
 builder.Services.AddScoped<IFoodDataRepository, FoodDataRepository>();
@@ -156,8 +175,14 @@ builder.AddCommunityContextServices();
 builder.AddSharedContextServices();
 builder.AddCortexConfigurationServices();
 
+// -----------------------
+// Build app
+// -----------------------
 var app = builder.Build();
 
+// -----------------------
+// Swagger
+// -----------------------
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -165,6 +190,9 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
+// -----------------------
+// Middleware
+// -----------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseCors("AllowDevelopment");
@@ -174,15 +202,21 @@ else
     app.UseCors("AllowNetlifyFrontend");
     app.UseHttpsRedirection();
 }
-app.UseCors("AllowDevelopment");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+// -----------------------
+// Ensure DB
+// -----------------------
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     context.Database.EnsureCreated();
 }
 
+// -----------------------
+// Run
+// -----------------------
 app.Run();
