@@ -3,92 +3,85 @@ using DevsPros.Diabelife.Platform.API.HealthyLife.Application.Internal.OutboundS
 using DevsPros.Diabelife.Platform.API.HealthyLife.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.HealthyLife.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.HealthyLife.Infrastructure.Persistence.EFC.Repositories;
+
 using DevsPros.Diabelife.Platform.API.Notifications.Application.Internal.CommandServices;
 using DevsPros.Diabelife.Platform.API.Notifications.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.Notifications.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Notifications.Infrastructure.Persistence.EFC.Repositories;
+
 using DevsPros.Diabelife.Platform.API.Appointment.Application.Internal.CommandServices;
 using DevsPros.Diabelife.Platform.API.Appointment.Application.Internal.OutboundServices;
 using DevsPros.Diabelife.Platform.API.Appointment.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.Appointment.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Appointment.Infrastructure.Persistence.EFC.Repositories;
+
 using DevsPros.Diabelife.Platform.API.Glucometer.Application.Internal.CommandServices;
 using DevsPros.Diabelife.Platform.API.Glucometer.Application.Internal.OutboundServices;
 using DevsPros.Diabelife.Platform.API.Glucometer.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.Glucometer.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Glucometer.Infrastructure.Persistence.EFC.Repositories;
+
 using DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
-// Authentication imports
+using DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+
+using DevsPros.Diabelife.Platform.API.Community.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+
 using DevsPros.Diabelife.Platform.API.Authentication.Application.Internal.CommandServices;
 using DevsPros.Diabelife.Platform.API.Authentication.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.Shared.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
-// Reports imports
+
 using DevsPros.Diabelife.Platform.API.Reports.Application.Internal.CommandServices;
 using DevsPros.Diabelife.Platform.API.Reports.Application.Internal.QueryServices;
 using DevsPros.Diabelife.Platform.API.Reports.Domain.Repositories;
 using DevsPros.Diabelife.Platform.API.Reports.Infrastructure.Persistence.EFC.Repositories;
-// JWT imports
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text;
+using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration.Extensions;
+using ACME.LearningCenterPlatform.API.Shared.Infrastructure.Mediator.Cortex.Configuration.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure port for Render deployment
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
-// Configure Swagger/OpenAPI
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo 
-    { 
-        Title = "DiabeLife API", 
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "DiabeLife API",
         Version = "v1",
-        Description = "API for managing diabetes health metrics, food data, recommendations, authentication and reports",
-        Contact = new OpenApiContact
-        {
-            Name = "DevsPros Team",
-            Email = "devspros@diabelife.com"
-        }
+        Description = "API for managing diabetes health metrics, food data, recommendations, authentication, community, and reports",
+        Contact = new OpenApiContact { Name = "DevsPros Team", Email = "devspros@diabelife.com" }
     });
     c.EnableAnnotations();
-    
-    // Add JWT authentication to Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme. Enter your token in the text input below (without 'Bearer' prefix).",
+        Description = "JWT Authorization header using the Bearer scheme. Enter your token below (without 'Bearer').",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
         BearerFormat = "JWT"
     });
-    
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
             },
             Array.Empty<string>()
         }
     });
 });
 
-// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowNetlifyFrontend", policy =>
@@ -98,7 +91,6 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
               .AllowCredentials();
     });
-    
     options.AddPolicy("AllowDevelopment", policy =>
     {
         policy.AllowAnyOrigin()
@@ -107,16 +99,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configure MySQL Database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? "Server=localhost;Database=diabelife;Uid=root;Pwd=password;";
+builder.Services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseMySQL(connectionString);
-});
-
-// Configure JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "your-secret-key-here-make-it-longer-than-32-characters-for-security";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "DiabeLifeAPI";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "DiabeLifeClient";
@@ -139,54 +125,44 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// Register Repositories
 builder.Services.AddScoped<IHealthMetricRepository, HealthMetricRepository>();
 builder.Services.AddScoped<IRecommendationRepository, RecommendationRepository>();
 builder.Services.AddScoped<IFoodDataRepository, FoodDataRepository>();
-
-// Authentication & Reports Repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IReportRepository, ReportRepository>();
-
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IGlucoseMeasurementRepository, GlucoseMeasurementRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
 
-// Register Command Services
 builder.Services.AddScoped<IHealthMetricCommandService, HealthMetricCommandService>();
 builder.Services.AddScoped<IRecommendationCommandService, RecommendationCommandService>();
 builder.Services.AddScoped<IFoodDataCommandService, FoodDataCommandService>();
-
-// Authentication & Reports Command Services
-builder.Services.AddScoped<IAuthCommandService, AuthCommandService>();
-builder.Services.AddScoped<IReportCommandService, ReportCommandService>();
 builder.Services.AddScoped<NotificationCommandService>();
 builder.Services.AddScoped<IAppointmentCommandService, AppointmentCommandService>();
 builder.Services.AddScoped<IGlucoseMeasurementCommandService, GlucoseMeasurementCommandService>();
+builder.Services.AddScoped<IAuthCommandService, AuthCommandService>();
+builder.Services.AddScoped<IReportCommandService, ReportCommandService>();
 
-
-// Register Query Services
 builder.Services.AddScoped<IHealthMetricQueryService, HealthMetricQueryService>();
 builder.Services.AddScoped<IRecommendationQueryService, RecommendationQueryService>();
 builder.Services.AddScoped<IFoodDataQueryService, FoodDataQueryService>();
-
-// Authentication & Reports Query Services
-builder.Services.AddScoped<IAuthQueryService, AuthQueryService>();
-builder.Services.AddScoped<IReportQueryService, ReportQueryService>();
 builder.Services.AddScoped<NotificationQueryService>();
 builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
 builder.Services.AddScoped<IGlucoseMeasurementQueryService, GlucoseMeasurementQueryService>();
+builder.Services.AddScoped<IAuthQueryService, AuthQueryService>();
+builder.Services.AddScoped<IReportQueryService, ReportQueryService>();
 
+builder.AddCommunityContextServices();
+builder.AddSharedContextServices();
+builder.AddCortexConfigurationServices();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// Configure Swagger for all environments
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "DiabeLife API v1");
-    c.RoutePrefix = "swagger"; // Swagger UI available at /swagger
+    c.RoutePrefix = "swagger";
 });
 
 if (app.Environment.IsDevelopment())
@@ -196,14 +172,13 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseCors("AllowNetlifyFrontend");
-    // Use HTTPS redirection only in production
     app.UseHttpsRedirection();
 }
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Ensure database is created
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
