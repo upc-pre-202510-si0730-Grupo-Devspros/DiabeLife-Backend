@@ -46,6 +46,7 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Configuration.AddEnvironmentVariables();
 
 // Configure Swagger/OpenAPI
 builder.Services.AddSwaggerGen(c =>
@@ -110,7 +111,9 @@ builder.Services.AddCors(options =>
 });
 
 // Configure MySQL Database
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+var connectionString =
+    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Server=localhost;Database=diabelife;Uid=root;Pwd=password;";
 
 builder.Services.AddDbContext<AppDbContext>(options =>
