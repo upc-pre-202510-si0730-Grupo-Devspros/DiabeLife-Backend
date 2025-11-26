@@ -188,22 +188,13 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-// CORS
-if (app.Environment.IsDevelopment())
-{
-    app.UseCors("AllowLocalAndNetlify"); // Dev: localhost + Netlify
-}
-else
-{
-    app.UseCors("AllowLocalAndNetlify"); // Prod: Netlify only
-    app.UseHttpsRedirection();
-}
+// CORS - aplicar **una vez** y antes de Authentication/Authorization
+app.UseCors("AllowLocalAndNetlify");
 
-app.UseCors("AllowLocalAndNetlify"); // <-- antes de app.UseAuthentication()
+app.UseHttpsRedirection(); // opcional en dev, pero recomendable en prod
+
 app.UseAuthentication();
 app.UseAuthorization();
-
- 
 
 app.MapControllers();
 
