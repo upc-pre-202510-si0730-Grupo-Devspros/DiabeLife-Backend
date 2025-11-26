@@ -190,6 +190,7 @@ builder.Services.AddScoped<IGlucoseMeasurementQueryService, GlucoseMeasurementQu
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 builder.Services.AddScoped<ICommunityPostRepository, CommunityPostRepository>();
