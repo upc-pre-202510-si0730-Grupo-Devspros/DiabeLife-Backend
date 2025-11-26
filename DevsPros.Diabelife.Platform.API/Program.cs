@@ -203,7 +203,7 @@ app.UseCors("AllowLocalAndNetlify"); // <-- antes de app.UseAuthentication()
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+ 
 
 app.MapControllers();
 
