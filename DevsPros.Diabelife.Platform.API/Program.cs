@@ -188,13 +188,19 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-// CORS - aplicar **una vez** y antes de Authentication/Authorization
+// CORS - aplicar **una vez** y antes de Authentication/Authorization// ----------------- Middleware -----------------
+// CORS: aplicar **una sola vez** y antes de Authentication/Authorization
 app.UseCors("AllowLocalAndNetlify");
 
-app.UseHttpsRedirection(); // opcional en dev, pero recomendable en prod
+// HTTPS redirection: solo en producción
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
