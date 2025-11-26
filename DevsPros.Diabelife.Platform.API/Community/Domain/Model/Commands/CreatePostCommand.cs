@@ -5,5 +5,5 @@ public record CreatePostCommand(
     Guid AuthorId,
     string AuthorName,
     string Content,
-    string? ImageUrl = null
+    string? ImageUrl
 );

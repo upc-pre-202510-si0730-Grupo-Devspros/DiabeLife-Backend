@@ -28,17 +28,14 @@ public class CommunityPost
 
     public CommunityPost(CreatePostCommand command)
         : this(
-            new AuthorId(command.AuthorId),
-            new AuthorName(command.AuthorName),
-            new Content(command.Content),
-            string.IsNullOrWhiteSpace(command.ImageUrl) ? null : new ImageUrl(command.ImageUrl)
-        )
+                new AuthorId(command.AuthorId),
+                new AuthorName(command.AuthorName),
+                new Content(command.Content),
+                string.IsNullOrWhiteSpace(command.ImageUrl) ? null : new ImageUrl(command.ImageUrl))
+        
     {
-        AddDomainEvent(new PostCreatedEvent(
-            AuthorId.Value,
-            Content.Value,
-            ImageUrl?.Value
-        ));
+        AddDomainEvent(new PostCreatedEvent(AuthorId.Value, Content.Value, ImageUrl?.Value));
+
     }
 
     public void AddComment(AuthorId authorId, AuthorName authorName, Content content)
