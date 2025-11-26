@@ -34,6 +34,11 @@ using DevsPros.Diabelife.Platform.API.Reports.Infrastructure.Persistence.EFC.Rep
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DevsPros.Diabelife.Platform.API.Community.Application.Internal.CommandServices;
+using DevsPros.Diabelife.Platform.API.Community.Application.Internal.QueryServices;
+using DevsPros.Diabelife.Platform.API.Community.Domain.Repositories;
+using DevsPros.Diabelife.Platform.API.Community.Domain.Services;
+using DevsPros.Diabelife.Platform.API.Community.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -181,8 +186,15 @@ builder.Services.AddScoped<IReportQueryService, ReportQueryService>();
 builder.Services.AddScoped<NotificationQueryService>();
 builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
 builder.Services.AddScoped<IGlucoseMeasurementQueryService, GlucoseMeasurementQueryService>();
-builder.AddCommunityContextServices();
 
+
+
+builder.Services.AddScoped<ICommunityPostRepository, CommunityPostRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+
+builder.Services.AddScoped<ICommunityCommandService, CommunityCommandService>();
+
+builder.Services.AddScoped<ICommunityQueryService, CommunityQueryService>();
 
 var app = builder.Build();
 
