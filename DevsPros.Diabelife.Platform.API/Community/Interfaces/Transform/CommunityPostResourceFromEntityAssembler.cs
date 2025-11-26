@@ -11,6 +11,7 @@ public static class CommunityPostResourceFromEntityAssembler
             entity.Id.Value,
             entity.Content.Value,
             entity.AuthorId.Value,
+            entity.AuthorName.Value,
             entity.ImageUrl?.Value,
             entity.Likes,
             entity.Comments.Count

@@ -4,7 +4,8 @@ public record CommunityPostResource(
     Guid Id,
     string Content,
     Guid AuthorId,
+    string AuthorName,
     string? ImageUrl,
     int Likes,
-    int CommentsCount
+    int CommentCount
 );
