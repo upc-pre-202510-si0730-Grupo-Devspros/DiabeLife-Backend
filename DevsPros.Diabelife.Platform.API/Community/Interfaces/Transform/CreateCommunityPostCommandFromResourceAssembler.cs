@@ -9,7 +9,7 @@ public static class CreateCommunityPostCommandFromResourceAssembler
     {
         return new CreatePostCommand(
             resource.AuthorId,
-            resource.AuthorName,     // <-- aquí ahora
+            resource.AuthorName,
             resource.Content,
             resource.ImageUrl
         );

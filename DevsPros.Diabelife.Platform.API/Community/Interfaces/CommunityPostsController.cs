@@ -55,8 +55,9 @@ public class CommunityPostsController(
         OperationId = "CreateCommunityPost")]
     [SwaggerResponse(StatusCodes.Status201Created, "Post created successfully", typeof(CommunityPostResource))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid request")]
-    public async Task<IActionResult> CreatePost([FromBody] CreateCommunityPostResource resource)
-    {
+    
+    [HttpPost]
+    public async Task<IActionResult> CreatePost(CreateCommunityPostResource resource)    {
         var command = CreateCommunityPostCommandFromResourceAssembler.ToCommandFromResource(resource);
         var post = await communityPostCommandService.Handle(command);
         if (post is null) return BadRequest();

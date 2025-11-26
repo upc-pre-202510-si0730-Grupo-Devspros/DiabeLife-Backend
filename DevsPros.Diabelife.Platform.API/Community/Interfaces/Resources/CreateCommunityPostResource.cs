@@ -2,7 +2,7 @@
 
 public record CreateCommunityPostResource(
     Guid AuthorId,
-    string AuthorName,
+    string AuthorName,  
     string Content,
     string? ImageUrl
 );

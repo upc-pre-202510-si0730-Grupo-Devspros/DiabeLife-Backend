@@ -47,6 +47,7 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 // ----------------- Add Services -----------------
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Configuration.AddEnvironmentVariables();
 
