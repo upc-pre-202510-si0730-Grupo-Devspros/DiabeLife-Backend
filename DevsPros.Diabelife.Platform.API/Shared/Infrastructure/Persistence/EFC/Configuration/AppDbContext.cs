@@ -166,6 +166,13 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(a => a.CreatedAt).HasColumnName("created_at").IsRequired();
             entity.Property(a => a.UpdatedAt).HasColumnName("updated_at").IsRequired();
         });
+        builder.Entity<CommunityPost>()
+            .Property(p => p.AuthorName)
+            .HasConversion(v => v.Value, v => new AuthorName(v));
+        builder.Entity<CommunityPost>()
+            .Property(p => p.Id)
+            .HasConversion(v => v.Value, v => new CommunityPostId(v))
+            .ValueGeneratedNever();
 
         //
         // ===== GLUCOMETER =====

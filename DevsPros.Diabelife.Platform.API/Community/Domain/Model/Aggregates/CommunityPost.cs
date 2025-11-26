@@ -16,10 +16,8 @@ public class CommunityPost
     public int Likes { get; private set; }
     public List<Comment> Comments { get; private set; } = new();
 
-    // Constructor protegido (EF)
     protected CommunityPost() { }
 
-    // Constructor principal completo
     public CommunityPost(AuthorId authorId, AuthorName authorName, Content content, ImageUrl? imageUrl = null)
     {
         AuthorId = authorId;
@@ -28,7 +26,6 @@ public class CommunityPost
         ImageUrl = imageUrl;
     }
 
-    // Constructor desde Command
     public CommunityPost(CreatePostCommand command)
         : this(
             new AuthorId(command.AuthorId),
