@@ -101,10 +101,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowNetlifyFrontend", policy =>
     {
-        policy.WithOrigins("https://diabelife-frontend.netlify.app")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+        policy.WithOrigins(
+                "https://diabelife-frontend.netlify.app",
+                "http://localhost:5173"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
     
     options.AddPolicy("AllowDevelopment", policy =>
