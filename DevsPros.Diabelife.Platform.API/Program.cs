@@ -93,15 +93,15 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalAndNetlify", policy =>
-        policy.WithOrigins("http://localhost:5173", "https://diabelife-frontend.netlify.app")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials());
-
-    options.AddPolicy("AllowAll", policy =>
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    {
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "https://diabelife-frontend.netlify.app"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 // ----------------- DB -----------------
@@ -199,8 +199,12 @@ else
     app.UseHttpsRedirection();
 }
 
+app.UseCors("AllowLocalAndNetlify"); // <-- antes de app.UseAuthentication()
 app.UseAuthentication();
 app.UseAuthorization();
+
+
+
 app.MapControllers();
 
 // ----------------- Ensure DB -----------------
