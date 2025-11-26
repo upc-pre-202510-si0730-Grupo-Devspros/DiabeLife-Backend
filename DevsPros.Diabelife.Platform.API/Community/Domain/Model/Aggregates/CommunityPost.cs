@@ -27,7 +27,11 @@ public class CommunityPost
 
     // Desde Command
     public CommunityPost(CreatePostCommand command)
-        : this(new AuthorId(command.AuthorId), new Content(command.Content),
+        : this(
+            new AuthorId(command.AuthorId),
+            string.IsNullOrWhiteSpace(command.Content) && string.IsNullOrWhiteSpace(command.ImageUrl)
+                ? throw new ArgumentException("A post must contain text or image.")
+                : new Content(string.IsNullOrWhiteSpace(command.Content) ? " " : command.Content),
             string.IsNullOrWhiteSpace(command.ImageUrl) ? null : new ImageUrl(command.ImageUrl))
     {
         AddDomainEvent(new PostCreatedEvent(AuthorId.Value, Content.Value, ImageUrl?.Value));
