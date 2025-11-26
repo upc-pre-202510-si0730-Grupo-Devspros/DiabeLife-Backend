@@ -187,6 +187,9 @@ builder.Services.AddScoped<NotificationQueryService>();
 builder.Services.AddScoped<IAppointmentQueryService, AppointmentQueryService>();
 builder.Services.AddScoped<IGlucoseMeasurementQueryService, GlucoseMeasurementQueryService>();
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 
 builder.Services.AddScoped<ICommunityPostRepository, CommunityPostRepository>();
