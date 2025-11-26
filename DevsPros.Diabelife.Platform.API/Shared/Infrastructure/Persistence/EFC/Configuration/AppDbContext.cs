@@ -211,7 +211,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             .Property(p => p.ImageUrl)
             .HasConversion(v => v == null ? null : v.Value, v => v == null ? null : new ImageUrl(v));
 
-        // ValueObject conversions for Comment
         builder.Entity<Comment>()
             .Property(c => c.Id)
             .ValueGeneratedNever();
@@ -221,12 +220,17 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             .HasConversion(v => v.Value, v => new AuthorId(v));
 
         builder.Entity<Comment>()
+            .Property(c => c.AuthorName)
+            .HasConversion(v => v.Value, v => new AuthorName(v));
+
+        builder.Entity<Comment>()
             .Property(c => c.Content)
             .HasConversion(v => v.Value, v => new Content(v));
 
         builder.Entity<Comment>()
             .Property(c => c.PostId)
             .HasConversion(v => v.Value, v => new CommunityPostId(v));
+
 
         //
         // ===== GLOBAL NAMING CONVENTION =====
