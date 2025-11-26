@@ -3,5 +3,6 @@
 public record CreateCommentResource(
     Guid PostId,
     Guid AuthorId,
+    string AuthorName,
     string Content
 );

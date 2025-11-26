@@ -33,13 +33,18 @@ public class CommunityPost
         AddDomainEvent(new PostCreatedEvent(AuthorId.Value, Content.Value, ImageUrl?.Value));
     }
 
-    // Agregar comentario
-    public void AddComment(AuthorId authorId, Content content)
+    public void AddComment(AuthorId authorId, AuthorName authorName, Content content)
     {
-        var comment = new Comment(authorId, content, Id);
+        var comment = new Comment(authorId, authorName, content, Id);
         Comments.Add(comment);
-        AddDomainEvent(new CommentAddedEvent(Id.Value, authorId.Value, content.Value));
+
+        AddDomainEvent(new CommentAddedEvent(
+            Id.Value,
+            authorId.Value,
+            content.Value
+        ));
     }
+
 
     // Dar like
     public void AddLike(AuthorId authorId)

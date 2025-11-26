@@ -9,8 +9,9 @@ public static class CommentResourceFromEntityAssembler
     {
         return new CommentResource(
             entity.Id,
-            entity.PostId.Value,      
+            entity.PostId.Value,
             entity.AuthorId.Value,
+            entity.AuthorName.Value,
             entity.Content.Value,
             entity.CreatedAt
         );

@@ -25,13 +25,20 @@ public class CommunityCommandService(
     {
         var postId = new CommunityPostId(command.PostId);
         var post = await postRepository.FindByIdAsync(postId);
+
         if (post is null)
             throw new KeyNotFoundException("El post no fue encontrado.");
 
-        post.AddComment(new AuthorId(command.AuthorId), new Content(command.Content));
+        post.AddComment(
+            new AuthorId(command.AuthorId),
+            new AuthorName(command.AuthorName),
+            new Content(command.Content)
+        );
+
         await unitOfWork.CompleteAsync();
         return post;
     }
+
 
     public async Task<CommunityPost?> Handle(AddLikeCommand command)
     {

@@ -7,8 +7,10 @@ public record Content
     public Content(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("The value cannot be null or whitespace.");
-        
-        Value = value;
+            throw new ArgumentException("Content cannot be empty");
+
+        Value = value.Trim();
     }
+
+    public override string ToString() => Value;
 }

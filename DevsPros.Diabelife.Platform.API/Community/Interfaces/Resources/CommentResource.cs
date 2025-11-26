@@ -4,6 +4,7 @@ public record CommentResource(
     Guid Id,
     Guid PostId,
     Guid AuthorId,
+    string AuthorName,
     string Content,
     DateTime CreatedAt
 );
