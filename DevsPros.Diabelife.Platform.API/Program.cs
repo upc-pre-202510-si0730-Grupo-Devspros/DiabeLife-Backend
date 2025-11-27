@@ -97,7 +97,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "http://localhost:5173",
-                "https://diabelife-frontend.netlify.app"
+                "https://diabelife-frontend.netlify.app",
+                "https://glistening-beijinho-db43a1.netlify.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
