@@ -7,5 +7,6 @@ public record CommunityPostResource(
     string AuthorName,
     string? ImageUrl,
     int Likes,
-    int CommentCount
+    int CommentCount,
+    DateTime CreatedAt
 );

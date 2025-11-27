@@ -2,6 +2,7 @@ using DevsPros.Diabelife.Platform.API.Community.Domain.Model.Commands;
 using DevsPros.Diabelife.Platform.API.Community.Domain.Model.Entities;
 using DevsPros.Diabelife.Platform.API.Community.Domain.Model.Events;
 using DevsPros.Diabelife.Platform.API.Community.Domain.Model.ValueObjects;
+using DevsPros.Diabelife.Platform.API.Shared.Domain.Model;
 
 namespace DevsPros.Diabelife.Platform.API.Community.Domain.Model.Aggregates;
 
@@ -13,6 +14,9 @@ public class CommunityPost
 
     public Content Content { get; private set; }
     public ImageUrl? ImageUrl { get; private set; }
+    
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
     public int Likes { get; private set; }
     public List<Comment> Comments { get; private set; } = new();
 
@@ -24,6 +28,8 @@ public class CommunityPost
         AuthorName = authorName;
         Content = content;
         ImageUrl = imageUrl;
+        CreatedAt = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public CommunityPost(CreatePostCommand command)

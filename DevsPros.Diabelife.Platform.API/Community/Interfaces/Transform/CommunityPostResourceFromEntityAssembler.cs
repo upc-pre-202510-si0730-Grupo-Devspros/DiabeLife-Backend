@@ -14,7 +14,9 @@ public static class CommunityPostResourceFromEntityAssembler
             entity.AuthorName.Value,   // <-- ahora sí existe
             entity.ImageUrl?.Value,
             entity.Likes,
-            entity.Comments.Count
+            entity.Comments.Count,
+            entity.CreatedAt
+
         );
     }
 }
