@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace DevsPros.Diabelife.Platform.API.Community.Interfaces;
 
 [ApiController]
-[Route("api/v1/community-posts/{postId:guid}/[controller]")]
+[Route("api/v1/community-posts/{postId:guid}/comments")]
 [Produces(MediaTypeNames.Application.Json)]
 [SwaggerTag("Community Comments endpoints")]
 public class CommentsController(
